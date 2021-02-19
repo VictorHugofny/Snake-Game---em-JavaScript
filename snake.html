@@ -1,0 +1,85 @@
+<canvas id="canvas" width = "400" height="400"></canvas>
+
+<script>
+window.onload = function(){
+    canvas = document.getElementById("canvas");
+    contexto = canvas.getContext("2d");
+
+    document.addEventListener("keydown", function(e){
+        console.log(e.keyCode); // pegar o codigo da tecla pressionada
+        switch(e.keyCode){
+            case 37:   //esquerda <
+                velX = -1;
+                velY = 0;
+                break;
+            case 38:   //cima ^
+                velX = 0;
+                velY = -1;
+                break;
+            case 39:   //direita >
+                velX = 1;
+                velY = 0;
+                break;
+            case 40:   //baixo v
+                velX = 0;
+                velY = 1;
+                break;
+               
+        }
+    });
+    setInterval(jogo, 1000/10);
+}
+snake = []; // vetor = tamanho da cobra++
+positionX = 10;
+positionY = 10;
+foodX = 5;
+foodY = 5;
+velX = 0;
+velY = 0;
+grid = 20; // tamanho da grade 400x400
+tamanho = 5;
+
+    function jogo(){
+        positionX += velX;
+        positionY += velY;
+
+        if(positionX < 0){
+            positionX = grid;
+        }
+        if(positionX > grid){ // se passar do limite da tela
+            positionX = 0;
+        }
+        if(positionY< 0){
+            positionY = grid;
+        }
+        if(positionY > grid){ // se passar do limite da tela, ele volta no outro lado
+            positionY = 0;
+        }
+
+        contexto.fillStyle = "#8ae6f1"; // prencher o canvas com uma cor
+        contexto.fillRect(0,0,canvas.width, canvas.height); // criar  tamanho da tela
+        contexto.fillStyle = "black"; // criar um quadrado preto
+       
+        for(var i=0; i< snake.length; i++){ //enquanto o tamanho total da cobra for menor ao vetor, add++
+            contexto.fillRect(snake[i].x * grid, snake[i].y * grid , grid - 1, grid- 1);
+            if (snake[i].x == positionX && snake[i].y == positionY){
+                tamanho = 5;
+                contexto.fillStyle = "#f5fefe";
+            }
+
+        }
+        snake.push({x: positionX, y: positionY});
+
+        while(snake.length > tamanho){
+            snake.shift();
+        } 
+        contexto.fillStyle = "red";
+        contexto.fillRect(foodX * grid, foodY * grid, grid - 1, grid - 1);
+
+        if(positionX == foodX && positionY == foodY){
+            tamanho++; //se a comida na mesma posição da cobra aumentar ++ cobra
+            foodX = Math.floor(Math.random() * grid );
+            foodY = Math.floor(Math.random() * grid ); // MUDAR POSIÇÃO DA COMIDA
+        }
+    }
+</script>
